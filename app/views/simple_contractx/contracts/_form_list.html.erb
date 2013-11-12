@@ -1,0 +1,53 @@
+<div id="main_body">
+	
+	<% if false %>
+<%= render inline: @erb_code %>
+<% end %>
+<% if true %>
+<h4><%=t(@title)%></h4>
+<table class="table table-striped">
+  <tr>
+    <th>#</th>
+    <th><%=t('Project#') %></th>
+    <th><%=t('Contract#') %></th> 
+    <th><%=t('Contract Total($)') %></th>
+    <th><%=t('Payment Term') %></th>
+    <th><%=t('Paid Out') %></th>     
+    <th><%=t('Signed') %></th>
+    <th><%=t('Sign Date') %></th>
+    <th><%=t('Void') %></th>
+    <th><%=t('Last Updated By') %></th>
+    <th></th>
+    
+  </tr>
+
+<% models.each do |r| %>
+  <tr>
+  	<% if has_action_right?('show', params[:controller], r)%>
+  	  <td><%= link_to r.id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape simple_contractx.contract_path(r, :project_id => r.project_id, :parent_record_id => r.project_id, :parent_resource => SimpleContractx.project_resource.to_s)}" %></td>
+  	<% else %>
+  	  <td><%= r.id %></td>
+  	<% end %>
+    <% if has_action_right?('show', SimpleContractx.project_resource, SimpleContractx.project_class.find_by_id(r.project_id))%>
+      <td><%= link_to SimpleContractx.project_class.find_by_id(r.project_id).try('name'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape eval(SimpleContractx.show_project_path)}" %></td>
+    <% else %>
+  	  <td><%= SimpleContractx.project_class.find_by_id(r.project_id).try('name') %></td>
+  	<% end %>
+  	<td><%= prt(r, :contract_num)%></td>
+  	<td><%= number_with_precision(prt(r, :contract_total), :precision => 2) %></td>
+  	<td><%= prt(r, :payment_term) %></td> 	
+  	<td><%= prt(r, :paid_out) ? t('Yes') : t('No') %></td> 
+  	<td><%= prt(r, :signed) ? t('Yes') : t('No') %></td> 
+  	<td><%= r.sign_date.strftime("%Y/%m/%d") if r.sign_date.present? %></td> 	           
+    <td><%= prt(r, :void) ? t('Yes') : t('No') %></td>
+    <td><%= prt(r, 'last_updated_by.name') %></td>  
+    <td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape(edit_contract_path(r, :project_id => r.project.id, :parent_record_id => r.project_id, :parent_resource => SimpleContractx.project_resource.to_s))}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %> </td>
+
+  </tr>
+<% end %>
+
+</table>
+  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>&nbsp;
+  <%= link_to t('New Contract'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape(new_contract_path(:project_id => @project.id, :parent_record_id => @project.id, :parent_resource => SimpleContractx.project_resource.to_s))}", :class => BUTTONS_CLS['action'] if @project && has_action_right?('create', params[:controller], @project) %>
+<% end %>
+</div>

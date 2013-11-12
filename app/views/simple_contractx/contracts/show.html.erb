@@ -1,0 +1,81 @@
+<div id='main_body'>
+	<% if false %>
+<%= render inline: ERB.new(@erb_code).result(binding) %>
+<% end %>
+<% if true %>
+<h4><%=t('Contract Info')%> </h4>
+
+<p>
+  <b><%=t('Project Name')%></b>
+  <%= @project.name %>
+</p>  
+<p>
+  <b><%=t('Created At')%></b>
+  <%= @contract.created_at.strftime("%Y/%m/%d") %>
+</p> 
+<p>
+  <b><%=t('Contract#')%></b>
+  <%= @contract.contract_num %>
+</p> 
+<p>
+  <b><%=t('Contract Total($)')%></b>
+  <%= number_with_precision(@contract.contract_total, :precision => 2) %>
+</p> 
+<p>
+  <b><%=t('Payment Agreement')%></b>
+  <%= @contract.payment_agreement %>
+</p> 
+<p>
+  <b><%=t('Payment Term(day)')%></b>
+  <%= @contract.payment_term %>
+</p> 
+<p>
+  <b><%=t('Paid Out')%></b>
+  <%= @contract.paid_out ? t('Yes') : t('No') %>
+</p> 
+<p>
+  <b><%=t('Signed')%></b>
+  <%= @contract.signed ? t('Yes') : t('No') %>
+</p> 
+<p>
+  <b><%=t('Sign Date')%></b>
+  <%= @contract.sign_date.strftime("%Y/%m/%d") if @contract.sign_date.present? %>
+</p> 
+<p>
+  <b><%=t('Contract On File')%></b>
+  <%= @contract.contract_on_file ? t('Yes') : t('No') %>
+</p> 
+<p>
+  <b><%=t('Void')%></b>
+  <%= @contract.void ? t('Yes') : t('No') %>
+</p> 
+<p>
+  <b><%=t('Last Updated By')%></b>
+  <%= @contract.last_updated_by.name %>
+</p>
+<p>
+  <b>LOG</b>
+  <% Commonx::Log.where('resource_id = ? AND resource_name = ?', @contract.id, params[:controller].sub('/', '_')).order("created_at DESC").each do |t| %>
+    <li><%= t.created_at.strftime("%Y/%m/%d") %>,&nbsp; <%= t.last_updated_by.name %>,&nbsp; <%= t.log %> </li>
+  <% end %>
+</p>
+
+<table class="table table-striped">
+  <tr>
+    <th>
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	<%#= link_to t('New Request'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape(new_task_tarequest_path(@contract, :parent_record_id => @contract, :parent_resource => 'projectx/tasks'))}", :id => 'new_request_link', 
+    	              :class => BUTTONS_CLS['action'] if @contract.task_template.need_request && has_action_right?('create', 'projectx/task_requests') %>
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	<%#= link_to t('Task Requests'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape(projectx.task_task_requests_path(@contract, :parent_record_id => @contract, :parent_resource => 'projectx/tasks'))}", :id => 'task_request_link', 
+    	              :class => BUTTONS_CLS['action'] if @contract.task_template.need_request && has_action_right?('index', 'projectx/task_requests') %>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<%= link_to t('New Log'), SUBURI + commonx.new_log_path(:resource_id => @contract.id, :resource_name => params[:controller], :subaction => 'task', :format => :js), :remote => true, 
+                          :id => 'new_log_link', :class => BUTTONS_CLS['action'] if has_action_right?('create_task', 'commonx/logs') %>    	
+    </th>
+  </tr>
+</table>
+
+<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :id => 'close', :class => BUTTONS_CLS['action'] %>
+<% end %>
+</div>

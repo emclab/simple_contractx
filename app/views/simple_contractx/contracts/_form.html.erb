@@ -1,0 +1,27 @@
+<%= simple_form_for(@contract) do |f| %>    
+ 
+  <%= f.input :project_name, :label => t('Project Name'), :readonly => true, :input_html => {:value => @project.name}%>
+  <%= f.input :contract_num, :label => t('Contract#') %>
+  <%= f.input :contract_total, :label => t('Customer Name') %> 
+  <%= f.input :payment_agreement, :label => t('Payment Agreement'), :input_html => {:rows => 4} %>   
+  <%= f.input :payment_term, :label => t('Payment Term'), :placeholder => '15, 30, 45...' %>
+  <%= f.input :contract_on_file_noupdate, :label => t('Contract On File?'), :as => :boolean unless readonly?(@contract, 'contract_on_file')%>
+  <%= f.input :contract_on_file, :label => t('Contract On File?'), :as => :boolean if readonly?(@contract, 'contract_on_file')%>
+  <%= f.input :paid_out, :label => t('Paid Out'), :as => :boolean if readonly?(@contract, 'paid_out') %>
+  <%= f.input :paid_out_noupdate, :label => t('Paid Out'), :as => :boolean unless readonly?(@contract, 'paid_out') %>
+  <%= f.input :signed, :label => t('Signed'), :as => :boolean if readonly?(@contract, 'signed') %>
+  <%= f.input :signed_noupdate, :label => t('Signed'), :as => :boolean unless readonly?(@contract, 'signed') %>
+  <%= f.input :sign_date, :label => t('Sign Date'), :as => :string %>
+  <%= f.input :signed_by_id, :label => t('Signed By'), :collection => Authentify::UsersHelper::return_users('sales', params[:controller]), :label_method => :name, 
+              :value_method => :id, :include_blank => true unless readonly?(@contract, 'signed_by_id')%>
+  <%= f.input :signed_by_name, :label => t('Signed By'), :input_html => {:value => @contract.signed_by.name} if readonly?(@contract, 'signed_by_id')%>
+  <% if readonly?(@contract, 'paid_out')%>
+    <%= f.input :paid_out_noupdate, :label => t('Paid Out'), :input_html => {:value => @contract.expedite ? t('Yes') : t('No')} %>
+  <% else%>
+    <%= f.input :paid_out, :label => t('Paid Out'), :as => :boolean %>
+  <% end %>
+  <%= f.input :note, :label => t('Note'), :input_html => {:rows => 4} %>
+  
+  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %>  
+<% end %> 
