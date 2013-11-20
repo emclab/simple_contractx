@@ -66,9 +66,9 @@ describe "LinkTests" do
       page.should have_content('Contract Info')
       
       visit contracts_path
-      save_and_open_page
+      #save_and_open_page
       click_link('Edit')
-      save_and_open_page
+      #save_and_open_page
       page.should have_content('Update Contract')
       
       visit contracts_path(:project_id => @proj.id)
