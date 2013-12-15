@@ -4,12 +4,12 @@ module SimpleContractx
     attr_accessor :project_name, :signed_by_name, :contract_on_file_noupdate, :paid_out_noupdate, :signed_noupdate, :void_noupdate
                     
     attr_accessible :contract_on_file, :contract_total, :last_updated_by_id, :note, :paid_out, :payment_agreement, :project_id, :sign_date, 
-                    :signed, :signed_by_id, :payment_term, :contract_num, :void,           
+                    :signed, :signed_by_id, :payment_term, :contract_num, :void, :other_charge,          
                     :project_name, 
                     :as => :role_new
 
     attr_accessible :contract_on_file, :contract_total, :last_updated_by_id, :note, :paid_out, :payment_agreement, :project_id, :sign_date, 
-                    :signed, :signed_by_id, :payment_term, :contract_num, :void,            
+                    :signed, :signed_by_id, :payment_term, :contract_num, :void,  :other_charge,          
                     :project_name, :signed_by_name, :contract_on_file_noupdate, :paid_out_noupdate, :signed_noupdate, :void_noupdate,
                     :as => :role_update
 

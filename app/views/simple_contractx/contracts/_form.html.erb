@@ -1,14 +1,15 @@
-<% if false %>
+<% if @view_in_config && @erb_code %>
   <%= render inline: ERB.new(@erb_code).result(binding) %>
   
 <% else %>
 <%= simple_form_for(@contract) do |f| %>    
  
   <%= f.input :project_name, :label => t('Project Name'), :readonly => true, :input_html => {:value => @project.name}%>
-  <%= f.input :contract_num, :label => t('Contract#') %>
-  <%= f.input :contract_total, :label => t('Customer Name') %> 
-  <%= f.input :payment_agreement, :label => t('Payment Agreement'), :input_html => {:rows => 4} %>   
-  <%= f.input :payment_term, :label => t('Payment Term'), :placeholder => '15, 30, 45...' %>
+  <%= f.input :contract_num, :label => t('Contract#'), :readonly => readonly?(@contract, 'contract_num') %>
+  <%= f.input :contract_total, :label => t('Contract Total($)'), :readonly => readonly?(@contract, 'contract_total') %> 
+  <%= f.input :other_charge, :label => t('Other Charge($)'), :readonly => readonly?(@contract, 'other_charge') %>
+  <%= f.input :payment_agreement, :label => t('Payment Agreement'), :input_html => {:rows => 4}, :readonly => readonly?(@contract, 'payment_agreement') %>   
+  <%= f.input :payment_term, :label => t('Payment Term'), :placeholder => '15, 30, 45...', :readonly => readonly?(@contract, 'payment_term') %>
   <%= f.input :contract_on_file_noupdate, :label => t('Contract On File?'), :as => :boolean unless readonly?(@contract, 'contract_on_file')%>
   <%= f.input :contract_on_file, :label => t('Contract On File?'), :as => :boolean if readonly?(@contract, 'contract_on_file')%>
   <%= f.input :paid_out, :label => t('Paid Out'), :as => :boolean if readonly?(@contract, 'paid_out') %>

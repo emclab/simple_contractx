@@ -14,5 +14,6 @@ FactoryGirl.define do
     last_updated_by_id 1
     void false
     note "Mynote Text"
+    other_charge '8.88'
   end
 end

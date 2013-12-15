@@ -1,4 +1,4 @@
-<% if false %>
+<% if @view_in_config && @erb_code %>
   <%= render inline: ERB.new(@erb_code).result(binding) %>
   
 <% else %>
@@ -6,7 +6,8 @@
  
   <%= f.input :project_name, :label => t('Project Name'), :readonly => true, :input_html => {:value => @project.name}%>
   <%= f.input :contract_num, :label => t('Contract#') %>
-  <%= f.input :contract_total, :label => t('Customer Name') %> 
+  <%= f.input :contract_total, :label => t('Contract Total($)') %> 
+  <%= f.input :other_charge, :label => t('Other Charge($)') %>
   <%= f.input :payment_agreement, :label => t('Payment Agreement'), :input_html => {:rows => 4} %>   
   <%= f.input :payment_term, :label => t('Payment Term'), :placeholder => '15, 30, 45...' %>
   <%= f.input :paid_out, :label => t('Paid Out'), :as => :boolean %>
