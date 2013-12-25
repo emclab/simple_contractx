@@ -3,7 +3,7 @@
   
 <% else %>
 <div id="main_body">
-	
+<div class="pagination"><%= will_paginate models %></div>	
 <h4><%=t(@title)%></h4>
 <table class="table table-striped">
   <tr>
@@ -36,10 +36,10 @@
   	<td><%= prt(r, :contract_num)%></td>
   	<td><%= number_with_precision(prt(r, :contract_total), :precision => 2) %></td>
   	<td><%= prt(r, :payment_term) %></td> 	
-  	<td><%= prt(r, :paid_out) ? t('Yes') : t('No') %></td> 
-  	<td><%= prt(r, :signed) ? t('Yes') : t('No') %></td> 
+  	<td><%= r.paid_out ? t('Yes') : t('No') %></td> 
+  	<td><%= r.signed ? t('Yes') : t('No') %></td> 
   	<td><%= r.sign_date.strftime("%Y/%m/%d") if r.sign_date.present? %></td> 	           
-    <td><%= prt(r, :void) ? t('Yes') : t('No') %></td>
+    <td><%= r.void ? t('Yes') : t('No') %></td>
     <td><%= prt(r, 'last_updated_by.name') %></td>  
     <td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape(edit_contract_path(r, :project_id => r.project.id, :parent_record_id => r.project_id, :parent_resource => SimpleContractx.project_resource.to_s))}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %> </td>
 

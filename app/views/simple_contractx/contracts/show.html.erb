@@ -52,7 +52,7 @@
 </p> 
 <p>
   <b><%=t('Last Updated By')%></b>
-  <%= @contract.last_updated_by.name %>
+  <%= @contract.last_updated_by.name if @contract.last_updated_by_id.present? %>
 </p>
 <p>
   <b>LOG</b>
