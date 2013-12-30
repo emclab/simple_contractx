@@ -55,6 +55,7 @@ module SimpleContractx
     def load_parent_record
       @project = SimpleContractx.project_class.find_by_id(params[:project_id]) if params[:project_id].present? 
       @project = SimpleContractx.project_class.find_by_id(SimpleContractx::Contract.find_by_id(params[:id]).project_id) if params[:id].present? 
+      @project = SimpleContractx.project_class.find_by_id(params[:contract][:project_id]) if params[:contract].present? && params[:contract][:project_id].present?
     end
     
   end
