@@ -47,9 +47,15 @@
 <% end %>
 
 </table>
-  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>&nbsp;
-  <%= link_to t('New Contract'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape(new_contract_path(:project_id => @project.id, :parent_record_id => @project.id, :parent_resource => SimpleContractx.project_resource.to_s))}", :class => BUTTONS_CLS['action'] if @project && has_action_right?('create', params[:controller], @project) %>
 
+	<table class="table table-striped">
+	  <tr>
+	    <th>
+  			<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>&nbsp;
+  			<%= link_to t('New Contract'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape(new_contract_path(:project_id => @project.id, :parent_record_id => @project.id, :parent_resource => SimpleContractx.project_resource.to_s))}", :class => BUTTONS_CLS['action'] if @project && has_action_right?('create', params[:controller], @project) %>
+        </th>
+	  </tr>
+	</table> 
 </div>
 
 <% end %>
