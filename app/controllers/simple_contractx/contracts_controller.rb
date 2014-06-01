@@ -16,6 +16,7 @@ module SimpleContractx
     def new
       @title = 'New Contract'
       @contract = SimpleContractx::Contract.new
+      @erb_code = find_config_const('contract_new_view', 'simple_contractx')
     end
   
     def create
@@ -24,6 +25,7 @@ module SimpleContractx
       if @contract.save
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
       else
+        @erb_code = find_config_const('contract_new_view', 'simple_contractx')
         flash.now[:error] = t('Data Error. Not Saved!')
         render 'new'
       end
@@ -32,6 +34,7 @@ module SimpleContractx
     def edit
       @title = 'Edit Contract'
       @contract = SimpleContractx::Contract.find_by_id(params[:id])
+      @erb_code = find_config_const('contract_edit_view', 'simple_contractx')
     end
   
     def update
@@ -40,6 +43,7 @@ module SimpleContractx
       if @contract.update_attributes(params[:contract], :as => :role_update)
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
       else
+        @erb_code = find_config_const('contract_edit_view', 'simple_contractx')
         flash.now[:error] = t('Data Error. Not Updated!')
         render 'edit'
       end
