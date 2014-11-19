@@ -16,6 +16,7 @@ class CreateSimpleContractxContracts < ActiveRecord::Migration
       t.string :contract_num
       t.boolean :void, :default => false
       t.text :note
+      t.decimal :executed_contract_total, :precision => 10, :scale => 2
 
     end
     
