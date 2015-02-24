@@ -26,6 +26,13 @@ module SimpleContractx
 
     validates :contract_total, :project_id, :presence => true,
                                :numericality => {:greater_than => 0}
-    validates :payment_term, :numericality => {:greater_than_or_equal_to => 0, :only_integer => true, :if => 'payment_term.present?'}
+    validates :payment_term, :numericality => {:greater_than_or_equal_to => 0, :only_integer => true}, :if => 'payment_term.present?'
+    validates :executed_contract_total, :numericality => {:greater_than_or_equal_to => 0}, :if => 'executed_contract_total.present?'
+    validate :dynamic_validate 
+    
+    def dynamic_validate
+      wf = Authentify::AuthentifyUtility.find_config_const('dynamic_validate', 'simple_contractx')
+      eval(wf) if wf.present?
+    end
   end
 end

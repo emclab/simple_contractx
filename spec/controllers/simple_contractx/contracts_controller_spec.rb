@@ -1,9 +1,10 @@
-require 'spec_helper'
+require 'rails_helper'
 
 module SimpleContractx
-  describe ContractsController do
+  RSpec.describe ContractsController, type: :controller do
+    routes {SimpleContractx::Engine.routes}
     before(:each) do
-      controller.should_receive(:require_signin)
+      expect(controller).to receive(:require_signin)
     end
     before(:each) do
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
@@ -16,13 +17,9 @@ module SimpleContractx
       ur = FactoryGirl.create(:user_role, :role_definition_id => @role.id)
       ul = FactoryGirl.build(:user_level, :sys_user_group_id => ug.id)
       @u = FactoryGirl.create(:user, :user_levels => [ul], :user_roles => [ur])
-      @proj_type = FactoryGirl.create(:simple_typex_type)
-      @proj_type1 = FactoryGirl.create(:simple_typex_type, :name => 'newnew')
-      @tt = FactoryGirl.create(:task_templatex_template, :active => true, :last_updated_by_id => @u.id, :type_id => @proj_type.id)
-      @tt1 = FactoryGirl.create(:task_templatex_template, :name => 'a new name', :active => true, :last_updated_by_id => @u.id, :type_id => @proj_type1.id)
       @cust = FactoryGirl.create(:kustomerx_customer)
-      @proj = FactoryGirl.create(:fixed_task_projectx_project, :task_template_id => @tt.id, :customer_id => @cust.id)
-      @proj1 = FactoryGirl.create(:fixed_task_projectx_project, :task_template_id => @tt1.id, :name => 'a new name', :project_num => 'something new') #, :customer_id => @cust.id)
+      @proj = FactoryGirl.create(:ext_construction_projectx_project, :customer_id => @cust.id)
+      @proj1 = FactoryGirl.create(:ext_construction_projectx_project, :name => 'a new name', :project_num => 'something new') #, :customer_id => @cust.id)
       
     end
       
@@ -37,8 +34,8 @@ module SimpleContractx
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :void => false, :last_updated_by_id => @u.id, :project_id => @proj.id)
         qs1 = FactoryGirl.create(:simple_contractx_contract, :void => false, :last_updated_by_id => @u.id)
-        get 'index' , {:use_route => :simple_contractx}
-        assigns(:contracts).should =~ [qs, qs1]       
+        get 'index' 
+        expect(assigns(:contracts)).to match_array([qs, qs1])       
       end
       
       it "should return contracts for the template item" do
@@ -49,8 +46,8 @@ module SimpleContractx
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :void => false, :last_updated_by_id => @u.id, :project_id => @proj.id)
         qs1 = FactoryGirl.create(:simple_contractx_contract, :void => true, :last_updated_by_id => @u.id)
-        get 'index' , {:use_route => :simple_contractx, :project_id => @proj.id}
-        assigns(:contracts).should eq([qs])
+        get 'index' , {:project_id => @proj.id}
+        expect(assigns(:contracts)).to match_array([qs])
       end
     end
   
@@ -61,8 +58,8 @@ module SimpleContractx
         session[:employee] = true
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        get 'new' , {:use_route => :simple_contractx, :project_id => @proj.id}
-        response.should be_success
+        get 'new' , {:project_id => @proj.id}
+        expect(response).to be_success
       end
       
     end
@@ -75,8 +72,8 @@ module SimpleContractx
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.attributes_for(:simple_contractx_contract, :project_id => @proj.id)
-        get 'create' , {:use_route => :simple_contractx,  :contract => qs, :project_id => @proj.id}
-        response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
+        get 'create' , { :contract => qs, :project_id => @proj.id}
+        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
       end
       
       it "should render 'new' if data error" do
@@ -86,8 +83,8 @@ module SimpleContractx
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.attributes_for(:simple_contractx_contract, :contract_total => nil)
-        get 'create' , {:use_route => :simple_contractx, :project_id => @proj.id, :contract => qs}
-        response.should render_template("new")
+        get 'create' , {:project_id => @proj.id, :contract => qs}
+        expect(response).to render_template("new")
       end
     end
   
@@ -100,8 +97,8 @@ module SimpleContractx
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :project_id => @proj.id)
-        get 'edit' , {:use_route => :simple_contractx, :project_id => @proj.id, :id => qs.id}
-        response.should be_success
+        get 'edit' , {:project_id => @proj.id, :id => qs.id}
+        expect(response).to be_success
       end
       
     end
@@ -115,8 +112,8 @@ module SimpleContractx
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract)
-        get 'update' , {:use_route => :simple_contractx, :project_id => @proj.id, :id => qs.id, :contract => {:contract_on_file => true}}
-        response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
+        get 'update' , {:project_id => @proj.id, :id => qs.id, :contract => {:contract_on_file => true}}
+        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
       end
       
       it "should render 'new' if data error" do
@@ -126,8 +123,8 @@ module SimpleContractx
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract)
-        get 'update' , {:use_route => :simple_contractx, :project_id => @proj.id, :id => qs.id, :contract => {:contract_total => nil}}
-        response.should render_template("edit")
+        get 'update' , {:project_id => @proj.id, :id => qs.id, :contract => {:contract_total => nil}}
+        expect(response).to render_template("edit")
       end
     end
   
@@ -140,8 +137,8 @@ module SimpleContractx
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :project_id => @proj.id)
-        get 'show' , {:use_route => :simple_contractx, :project_id => @proj.id, :id => qs.id}
-        response.should be_success
+        get 'show' , {:project_id => @proj.id, :id => qs.id}
+        expect(response).to be_success
       end
     end
   

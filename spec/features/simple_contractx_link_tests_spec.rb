@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "LinkTests" do
+RSpec.describe "LinkTests", type: :request do
   describe "GET /simple_contractx_link_tests" do
     mini_btn = 'btn btn-mini '
     ActionView::CompiledTemplates::BUTTONS_CLS =
@@ -42,13 +42,9 @@ describe "LinkTests" do
       ua1 = FactoryGirl.create(:user_access, :action => 'show', :resource => 'simple_contractx_contracts', :role_definition_id => @role.id, :rank => 1,
            :sql_code => "")      
             
-      @proj_type = FactoryGirl.create(:simple_typex_type)
-      @proj_type1 = FactoryGirl.create(:simple_typex_type, :name => 'newnew')
-      @tt = FactoryGirl.create(:task_templatex_template, :active => true, :last_updated_by_id => @u.id, :type_id => @proj_type.id)
-      @tt1 = FactoryGirl.create(:task_templatex_template, :name => 'a new name', :active => true, :last_updated_by_id => @u.id, :type_id => @proj_type1.id)
       @cust = FactoryGirl.create(:kustomerx_customer)
-      @proj = FactoryGirl.create(:fixed_task_projectx_project, :task_template_id => @tt.id, :customer_id => @cust.id)
-      @proj1 = FactoryGirl.create(:fixed_task_projectx_project, :task_template_id => @tt1.id, :name => 'a new name', :project_num => 'something new') #, :customer_id => @cust.id)
+      @proj = FactoryGirl.create(:ext_construction_projectx_project, :customer_id => @cust.id)
+      @proj1 = FactoryGirl.create(:ext_construction_projectx_project,  :name => 'a new name', :project_num => 'something new') #, :customer_id => @cust.id)
       
       visit '/'
       #save_and_open_page
@@ -59,21 +55,21 @@ describe "LinkTests" do
     
     it "works! (now write some real specs)" do
       qs = FactoryGirl.create(:simple_contractx_contract, :void => false, :last_updated_by_id => @u.id, :project_id => @proj.id)
-      visit contracts_path
+      visit simple_contractx.contracts_path
       #save_and_open_page
-      page.should have_content('Contracts')
+      expect(page).to have_content('Contracts')
       click_link(qs.id.to_s)
-      page.should have_content('Contract Info')
+      expect(page).to have_content('Contract Info')
       
-      visit contracts_path
+      visit simple_contractx.contracts_path
       #save_and_open_page
       click_link('Edit')
       #save_and_open_page
-      page.should have_content('Update Contract')
+      expect(page).to have_content('Update Contract')
       
-      visit contracts_path(:project_id => @proj.id)
+      visit simple_contractx.contracts_path(:project_id => @proj.id)
       click_link('New Contract')
-      page.should have_content('New Contract')
+      expect(page).to have_content('New Contract')
     end
   end
 end

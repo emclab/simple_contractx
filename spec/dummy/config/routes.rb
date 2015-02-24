@@ -3,18 +3,14 @@ Rails.application.routes.draw do
   mount SimpleContractx::Engine => "/simple_contractx"
   mount Commonx::Engine => "/commonx"
   mount Authentify::Engine => '/authentify'
-  mount FixedTaskProjectx::Engine => '/projectx'
+  mount ExtConstructionProjectx::Engine => '/projectx'
   mount Kustomerx::Engine => '/kustomerx'
-  mount TemplateTaskx::Engine => '/taskx'
-  mount TaskTemplatex::Engine => '/templatex'
-  mount SimpleTypex::Engine => '/typex'
   mount Searchx::Engine => '/searchx'
   
-  resource :session
   
-  root :to => "authentify::sessions#new"
-  match '/signin',  :to => 'authentify::sessions#new'
-  match '/signout', :to => 'authentify::sessions#destroy'
-  match '/user_menus', :to => 'user_menus#index'
-  match '/view_handler', :to => 'authentify::application#view_handler'
+  root :to => "authentify/sessions#new"
+  get '/signin',  :to => 'authentify/sessions#new'
+  get '/signout', :to => 'authentify/sessions#destroy'
+  get '/user_menus', :to => 'user_menus#index'
+  get '/view_handler', :to => 'authentify/application#view_handler'
 end
