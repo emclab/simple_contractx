@@ -21,6 +21,7 @@ module SimpleContractx
       @proj = FactoryGirl.create(:ext_construction_projectx_project, :customer_id => @cust.id)
       @proj1 = FactoryGirl.create(:ext_construction_projectx_project, :name => 'a new name', :project_num => 'something new') #, :customer_id => @cust.id)
       
+      session[:user_role_ids] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id).user_role_ids
     end
       
     render_views
@@ -31,7 +32,6 @@ module SimpleContractx
         :sql_code => "SimpleContractx::Contract.where(:void => false).order('created_at')")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :void => false, :last_updated_by_id => @u.id, :project_id => @proj.id)
         qs1 = FactoryGirl.create(:simple_contractx_contract, :void => false, :last_updated_by_id => @u.id)
         get 'index' 
@@ -43,7 +43,6 @@ module SimpleContractx
         :sql_code => "SimpleContractx::Contract.where(:void => false).order('created_at')")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :void => false, :last_updated_by_id => @u.id, :project_id => @proj.id)
         qs1 = FactoryGirl.create(:simple_contractx_contract, :void => true, :last_updated_by_id => @u.id)
         get 'index' , {:project_id => @proj.id}
@@ -57,7 +56,6 @@ module SimpleContractx
         :sql_code => "")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         get 'new' , {:project_id => @proj.id}
         expect(response).to be_success
       end
@@ -70,7 +68,6 @@ module SimpleContractx
         :sql_code => "")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.attributes_for(:simple_contractx_contract, :project_id => @proj.id)
         get 'create' , { :contract => qs, :project_id => @proj.id}
         expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
@@ -81,7 +78,6 @@ module SimpleContractx
         :sql_code => "")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.attributes_for(:simple_contractx_contract, :contract_total => nil)
         get 'create' , {:project_id => @proj.id, :contract => qs}
         expect(response).to render_template("new")
@@ -95,7 +91,6 @@ module SimpleContractx
         :sql_code => "")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :project_id => @proj.id)
         get 'edit' , {:project_id => @proj.id, :id => qs.id}
         expect(response).to be_success
@@ -110,7 +105,6 @@ module SimpleContractx
         :sql_code => "")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract)
         get 'update' , {:project_id => @proj.id, :id => qs.id, :contract => {:contract_on_file => true}}
         expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
@@ -121,7 +115,6 @@ module SimpleContractx
         :sql_code => "")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract)
         get 'update' , {:project_id => @proj.id, :id => qs.id, :contract => {:contract_total => nil}}
         expect(response).to render_template("edit")
@@ -135,7 +128,6 @@ module SimpleContractx
         :sql_code => "")
         session[:employee] = true
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:simple_contractx_contract, :project_id => @proj.id)
         get 'show' , {:project_id => @proj.id, :id => qs.id}
         expect(response).to be_success

@@ -54,6 +54,8 @@ module Dummy
 
     # Version of your assets, change this if you want to expire all your assets
     #config.assets.version = '1.0'
+    #for other engines attr_accessible
+    config.active_record.whitelist_attributes = false
   end
 end
 
