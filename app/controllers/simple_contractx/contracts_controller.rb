@@ -32,7 +32,7 @@ module SimpleContractx
     end
   
     def edit
-      @title = 'Edit Contract'
+      @title = 'Update Contract'
       @contract = SimpleContractx::Contract.find_by_id(params[:id])
       @erb_code = find_config_const('contract_edit_view', 'simple_contractx')
     end
