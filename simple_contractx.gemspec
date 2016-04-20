@@ -7,11 +7,11 @@ require "simple_contractx/version"
 Gem::Specification.new do |s|
   s.name        = "simple_contractx"
   s.version     = SimpleContractx::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of SimpleContractx."
-  s.description = "TODO: Description of SimpleContractx."
+  s.authors     = ["Your name"]
+  s.email       = ["Your@email.com"]
+  s.homepage    = "http://home.com"
+  s.summary     = "Summary of SimpleContractx."
+  s.description = "Description of SimpleContractx."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
