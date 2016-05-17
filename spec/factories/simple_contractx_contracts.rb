@@ -15,5 +15,6 @@ FactoryGirl.define do
     void false
     note "Mynote Text"
     other_charge '8.88'
+    fort_token '123456789'
   end
 end

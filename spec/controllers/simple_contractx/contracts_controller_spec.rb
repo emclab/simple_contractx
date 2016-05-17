@@ -7,6 +7,7 @@ module SimpleContractx
       expect(controller).to receive(:require_signin)
     end
     before(:each) do
+      config_entry = FactoryGirl.create(:engine_config, :engine_name => 'rails_app', :engine_version => nil, :argument_name => 'SESSION_TIMEOUT_MINUTES', :argument_value => 30)
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
       @project_num_time_gen = FactoryGirl.create(:engine_config, :engine_name => 'fixed_task_projectx', :engine_version => nil, :argument_name => 'project_num_time_gen', 
         :argument_value => ' FixedTaskProjectx::Project.last.nil? ? (Time.now.strftime("%Y%m%d") + "-"  + 112233.to_s + "-" + rand(100..999).to_s) :  (Time.now.strftime("%Y%m%d") + "-"  + (FixedTaskProjectx::Project.last.project_num.split("-")[-2].to_i + 555).to_s + "-" + rand(100..999).to_s)')
@@ -22,6 +23,8 @@ module SimpleContractx
       @proj1 = FactoryGirl.create(:ext_construction_projectx_project, :name => 'a new name', :project_num => 'something new') #, :customer_id => @cust.id)
       
       session[:user_role_ids] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id).user_role_ids
+      
+      session[:fort_token] = @u.fort_token
     end
       
     render_views
@@ -54,9 +57,10 @@ module SimpleContractx
       it "returns http success" do
         user_access = FactoryGirl.create(:user_access, :action => 'create', :resource => 'simple_contractx_contracts', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
+        proj = FactoryGirl.create(:ext_construction_projectx_project, :name => 'namenewnew')
         session[:employee] = true
         session[:user_id] = @u.id
-        get 'new' , {:project_id => @proj.id}
+        get 'new' , {:project_id => proj.id}
         expect(response).to be_success
       end
       
@@ -70,7 +74,7 @@ module SimpleContractx
         session[:user_id] = @u.id
         qs = FactoryGirl.attributes_for(:simple_contractx_contract, :project_id => @proj.id)
         get 'create' , { :contract => qs, :project_id => @proj.id}
-        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
+        expect(response).to redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Saved!")
       end
       
       it "should render 'new' if data error" do
@@ -107,7 +111,7 @@ module SimpleContractx
         session[:user_id] = @u.id
         qs = FactoryGirl.create(:simple_contractx_contract)
         get 'update' , {:project_id => @proj.id, :id => qs.id, :contract => {:contract_on_file => true}}
-        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
+        expect(response).to redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Updated!")
       end
       
       it "should render 'new' if data error" do

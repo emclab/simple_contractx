@@ -16,13 +16,15 @@ class CreateKustomerxCustomers < ActiveRecord::Migration
       t.integer :quality_system_id
       t.string :employee_num
       t.string :revenue
-      t.text :customer_eval
+      t.string :email
       t.text :main_biz
       t.text :customer_specific
       t.text :note
       t.string :web
-
       t.timestamps
+      t.integer :customer_industry_id
+      t.string :cell
+      t.string :fort_token
     end
     
     add_index :kustomerx_customers, :name
@@ -30,5 +32,11 @@ class CreateKustomerxCustomers < ActiveRecord::Migration
     add_index :kustomerx_customers, :sales_id
     add_index :kustomerx_customers, :zone_id
     add_index :kustomerx_customers, :active
+    add_index :kustomerx_customers, :customer_industry_id
+    add_index :kustomerx_customers, :customer_status_category_id
+    add_index :kustomerx_customers, :phone
+    add_index :kustomerx_customers, :fort_token
+    add_index :kustomerx_customers, :cell
+    add_index :kustomerx_customers, :email
   end
 end

@@ -24,6 +24,8 @@ class CreateExtConstructionProjectxProjects < ActiveRecord::Migration
       t.timestamps
       t.integer :sales_id
       t.integer :project_coordinator_id
+      t.string :short_name
+      t.string :fort_token
     end
     
     add_index :ext_construction_projectx_projects, :customer_id
@@ -35,5 +37,8 @@ class CreateExtConstructionProjectxProjects < ActiveRecord::Migration
     add_index :ext_construction_projectx_projects, :name
     add_index :ext_construction_projectx_projects, :sales_id
     add_index :ext_construction_projectx_projects, :project_coordinator_id, :name => :ext_construction_projectx_coordinator
+    add_index :ext_construction_projectx_projects, :category_id
+    add_index :ext_construction_projectx_projects, :short_name
+    add_index :ext_construction_projectx_projects, :fort_token
   end
 end

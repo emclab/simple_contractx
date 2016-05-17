@@ -16,10 +16,10 @@ FactoryGirl.define do
     quality_system_id 1
     employee_num "MyString"
     revenue "MyString"
-    customer_eval "MyText"
     main_biz "MyText"
     customer_specific "MyText"
     note "MyText"
     web "MyString"
+    fort_token '123456789'
   end
 end

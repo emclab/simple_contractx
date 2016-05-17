@@ -10,22 +10,23 @@ module SimpleContractx
       @contracts = params[:simple_contractx_contracts][:model_ar_r]
       @contracts = @contracts.where(:project_id => params[:project_id]) if @project
       @contracts = @contracts.page(params[:page]).per_page(@max_pagination)
-      @erb_code = find_config_const('contract_index_view', 'simple_contractx')
+      @erb_code = find_config_const('contract_index_view', session[:fort_token], 'simple_contractx')
     end
   
     def new
       @title = 'New Contract'
       @contract = SimpleContractx::Contract.new
-      @erb_code = find_config_const('contract_new_view', 'simple_contractx')
+      @erb_code = find_config_const('contract_new_view', session[:fort_token], 'simple_contractx')
     end
   
     def create
       @contract = SimpleContractx::Contract.new(new_params)
       @contract.last_updated_by_id = session[:user_id]
+      @contract.fort_token = session[:fort_token]
       if @contract.save
-        redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
+        redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Saved!")
       else
-        @erb_code = find_config_const('contract_new_view', 'simple_contractx')
+        @erb_code = find_config_const('contract_new_view', session[:fort_token], 'simple_contractx')
         flash.now[:error] = t('Data Error. Not Saved!')
         render 'new'
       end
@@ -34,16 +35,16 @@ module SimpleContractx
     def edit
       @title = 'Update Contract'
       @contract = SimpleContractx::Contract.find_by_id(params[:id])
-      @erb_code = find_config_const('contract_edit_view', 'simple_contractx')
+      @erb_code = find_config_const('contract_edit_view', session[:fort_token], session[:fort_token], 'simple_contractx')
     end
   
     def update
       @contract = SimpleContractx::Contract.find_by_id(params[:id])
       @contract.last_updated_by_id = session[:user_id]
       if @contract.update_attributes(edit_params)
-        redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
+        redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Updated!")
       else
-        @erb_code = find_config_const('contract_edit_view', 'simple_contractx')
+        @erb_code = find_config_const('contract_edit_view', session[:fort_token], 'simple_contractx')
         flash.now[:error] = t('Data Error. Not Updated!')
         render 'edit'
       end
@@ -52,7 +53,7 @@ module SimpleContractx
     def show
       @title = 'Contract Info'
       @contract = SimpleContractx::Contract.find_by_id(params[:id])
-      @erb_code = find_config_const('contract_show_view', 'simple_contractx')
+      @erb_code = find_config_const('contract_show_view', session[:fort_token], 'simple_contractx')
     end
     
     protected

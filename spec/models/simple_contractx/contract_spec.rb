@@ -27,6 +27,11 @@ module SimpleContractx
       expect(p).not_to be_valid
     end
     
+    it "should reject nil fort_token" do
+      p = FactoryGirl.build(:simple_contractx_contract, :fort_token => nil)
+      expect(p).not_to be_valid
+    end
+    
     it "should reject non digit executed total" do
       p = FactoryGirl.build(:simple_contractx_contract, :executed_contract_total => 'nil')
       expect(p).not_to be_valid

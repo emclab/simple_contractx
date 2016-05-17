@@ -18,12 +18,12 @@
   <%= f.input :signed, :label => t('Signed'), :input_html => {:value => (@contract.signed ? t('Yes') : t('No'))} unless readonly?(@contract, 'signed') %>
   <%= f.input :signed_noupdate, :label => t('Signed'), :as => :boolean if readonly?(@contract, 'signed') %>
   <%= f.input :sign_date, :label => t('Sign Date'), :as => :string %>
-  <%= f.input :signed_by_id, :label => t('Signed By'), :collection => Authentify::UsersHelper.return_users('sales', params[:controller]), :label_method => :name, 
+  <%= f.input :signed_by_id, :label => t('Signed By'), :collection =>return_users('sales', params[:controller]), :label_method => :name, 
               :value_method => :id, :include_blank => true unless readonly?(@contract, 'signed_by_id')%>
   <%= f.input :signed_by_name, :label => t('Signed By'), :input_html => {:value => @contract.signed_by.name} if readonly?(@contract, 'signed_by_id')%>
   <%= f.input :note, :label => t('Note'), :input_html => {:rows => 4} %>
   
-  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+  <%= link_to t('Back'), SUBURI + "/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
   <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %>  
 <% end %> 
 
