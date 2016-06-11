@@ -54,7 +54,7 @@ RSpec.describe "LinkTests", type: :request do
       visit '/'
       #save_and_open_page
       fill_in "login", :with => @u.login
-      fill_in "password", :with => 'password'
+      fill_in "password", :with => @u.password
       click_button 'Login'
     end
     
@@ -63,6 +63,9 @@ RSpec.describe "LinkTests", type: :request do
       visit simple_contractx.contracts_path
       #save_and_open_page
       expect(page).to have_content('Contracts')
+      expect(Authentify::SysLog.all.count).to eq(1)
+      expect(Authentify::SysLog.all.first.resource).to eq('simple_contractx/contracts')
+      expect(Authentify::SysLog.all.first.user_id).to eq(@u.id)
       click_link(qs.id.to_s)
       expect(page).to have_content('Contract Info')
       
