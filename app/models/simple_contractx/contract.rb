@@ -14,6 +14,8 @@ module SimpleContractx
     validates :executed_contract_total, :numericality => {:greater_than_or_equal_to => 0}, :if => 'executed_contract_total.present?'
     validate :dynamic_validate 
     
+    default_scope {where(fort_token: Thread.current[:fort_token])}
+    
     def dynamic_validate
       wf = Authentify::AuthentifyUtility.find_config_const('dynamic_validate', fort_token, 'simple_contractx')
       eval(wf) if wf.present?
